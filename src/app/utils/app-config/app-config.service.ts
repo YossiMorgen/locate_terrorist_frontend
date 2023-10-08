@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class AppConfigService {
   public baseURI = 'https://silver-swords.wooden-puppy.xyz/';
-  
+
   public auth = `${this.baseURI}auth/`;
   public login = `${this.auth}login`;
 
@@ -13,5 +13,4 @@ export class AppConfigService {
   public reports = `${this.baseURI}reports/all`;
   public deleteReports = `${this.baseURI}delete`;
   public updateReports = `${this.baseURI}update`;
-
 }

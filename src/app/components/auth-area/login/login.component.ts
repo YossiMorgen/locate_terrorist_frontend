@@ -11,30 +11,30 @@ import CredentialsModel from 'src/app/models/credentials-model';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
   hide = true;
 
   public constructor(
-    private auth: AuthService, 
+    private auth: AuthService,
     public router: Router,
-    private formBuilder : FormBuilder,
+    private formBuilder: FormBuilder,
     private toast: ToastifyNotificationsService
-  ){} 
-  
+  ) {}
+
   public loginForm = this.formBuilder.group({
-    userName : ['', [Validators.required]],
-    password : ['', [Validators.required]]
-  })
+    userName: ['', [Validators.required]],
+    password: ['', [Validators.required]]
+  });
 
   ngOnInit(): void {
     console.log(this.router.url);
   }
 
-  public async login():Promise<void>{       
+  public async login(): Promise<void> {
     try {
-        await this.auth.login( this.loginForm.value as CredentialsModel );
-        this.router.navigateByUrl('/home');
-    } catch (error:any) {
-        this.toast.error(error);
+      await this.auth.login(this.loginForm.value as CredentialsModel);
+      this.router.navigateByUrl('/home');
+    } catch (error: any) {
+      this.toast.error(error);
     }
-  }}
+  }
+}

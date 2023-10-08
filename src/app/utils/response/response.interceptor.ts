@@ -13,24 +13,27 @@ import { tap } from 'rxjs';
 
 @Injectable()
 export class ResponseInterceptor implements HttpInterceptor {
-
   constructor(
-    private auth: AuthService, 
-    private router : Router,
-    private toast: ToastService,
-  ) { }
+    private auth: AuthService,
+    private router: Router,
+    private toast: ToastService
+  ) {}
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       tap({
-        next: (event : any) => {
+        next: (event: any) => {
           return event;
         },
-        error: (error : any) => {
-          if(error.status === 401) {
+        error: (error: any) => {
+          if (error.status === 401) {
             this.auth.logout();
           }
         }
-      }));
+      })
+    );
   }
 }

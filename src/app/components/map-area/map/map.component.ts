@@ -1,5 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core';
-import * as Leaflet from 'leaflet'; 
+import * as Leaflet from 'leaflet';
 import { ReportModel } from 'src/app/models/reports-model';
 import { ReportsService } from 'src/app/services/reports/reports.service';
 import { ToastifyNotificationsService } from 'src/app/services/toastify-notifications/toastify-notifications.service';
@@ -16,7 +16,7 @@ export class MapComponent {
   constructor(
     public reportsService: ReportsService,
     public toastify: ToastifyNotificationsService
-  ) {};
+  ) {}
 
   options = {
     layers: [
@@ -26,33 +26,34 @@ export class MapComponent {
     ],
     zoom: 16,
     center: { lat: 28.626137, lng: 79.821603 }
-  }
+  };
 
-  async initMarkers() {    
+  async initMarkers() {
     try {
       await this.reportsService.getReports();
     } catch (error: any) {
       this.toastify.error(error.message);
     }
-    let initialMarkers = this.reportsService.reports.map((report: ReportModel) => { 
-      return {
-        position: new Leaflet.LatLng(report.lat, report.lng),
-        draggable: false,
-        id: report.id,
-        ...report
+    let initialMarkers = this.reportsService.reports.map(
+      (report: ReportModel) => {
+        return {
+          position: new Leaflet.LatLng(report.lat, report.lng),
+          draggable: false,
+          id: report.id,
+          ...report
+        };
       }
-    });
+    );
 
     for (let index = 0; index < initialMarkers.length; index++) {
       const data = initialMarkers[index];
       const marker = this.generateMarker(data, data.id);
       marker.addTo(this.map).bindPopup(`<b>${data.lat},  ${data.lng}</b>`);
-      console.log("hi");
+      console.log('hi');
       this.map.panTo({ lat: data.lat, lng: data.lng });
       this.markers.push(marker);
     }
     console.log(this.markers);
-    
   }
 
   generateMarker(data: any, index: number) {
@@ -79,4 +80,3 @@ export class MapComponent {
     console.log($event.target.getLatLng());
   }
 }
- 
