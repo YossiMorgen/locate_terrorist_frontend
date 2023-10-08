@@ -6,4 +6,17 @@
     (leafletMapReady)="onMapReady($event)"
     (leafletClick)="mapClicked($event)"
   ></div>
+
+  <div class="form-grid-wrapper">
+    <div
+      *ngFor="let tempReport of tempReports; let i = index"
+      class="formContainer"
+    >
+      <new-report-form
+        (onFormReportClosed)="onCloseFormPerMarker(true, i)"
+        [latLng]="tempReport"
+        [index]="i"
+      ></new-report-form>
+    </div>
+  </div>
 </div>

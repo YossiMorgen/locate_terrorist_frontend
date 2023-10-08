@@ -12,6 +12,7 @@ import { ToastifyNotificationsService } from 'src/app/services/toastify-notifica
 export class MapComponent implements AfterViewInit {
   map!: Leaflet.Map;
   markers: Leaflet.Marker[] = [];
+  tempReports: Leaflet.LatLng[] = [];
 
   constructor(
     public reportsService: ReportsService,
@@ -64,7 +65,10 @@ export class MapComponent implements AfterViewInit {
   }
 
   generateMarker(data: any, index: number) {
-    return Leaflet.marker(data.position, { draggable: data.draggable })
+    return Leaflet.marker(data.position, {
+      draggable: data.draggable,
+      title: data.title
+    })
       .on('click', (event) => this.markerClicked(event, index))
       .on('dragend', (event) => this.markerDragEnd(event, index));
   }
@@ -77,6 +81,21 @@ export class MapComponent implements AfterViewInit {
 
   mapClicked($event: Leaflet.LeafletMouseEvent) {
     console.log($event.latlng.lat, $event.latlng.lng);
+    const marker = this.genereateLocalMarker($event);
+    marker.addTo(this.map);
+    this.tempReports.push(
+      new Leaflet.LatLng($event.latlng.lat, $event.latlng.lng)
+    );
+  }
+
+  onCloseFormPerMarker(isTemp: boolean, index: number) {
+    if (isTemp) {
+      this.tempReports.splice(index, 1);
+    }
+  }
+
+  genereateLocalMarker($event: Leaflet.LeafletMouseEvent) {
+    return Leaflet.marker($event.latlng);
   }
 
   markerClicked($event: any, index: number) {

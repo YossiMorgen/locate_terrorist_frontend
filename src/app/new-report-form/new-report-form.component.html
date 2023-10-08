@@ -1,0 +1,85 @@
+<form class="reportForm" #myForm="ngForm" (ngSubmit)="onFormSubmit(myForm)">
+  <div class="reportFormHead">
+    <img
+      (click)="onClickClose()"
+      class="buttonStyle reportFormBtn"
+      src="../../assets/closeBtn.svg"
+      alt="close icon"
+      width="24"
+    />
+  </div>
+  <div class="form-group">
+    <label for="type">סוג המקרה:</label>
+    <input
+      type="text"
+      id="type"
+      class="form-control"
+      [(ngModel)]="report.type"
+      name="type"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="description">תיאור</label>
+    <input
+      type="text"
+      id="description"
+      class="form-control"
+      [(ngModel)]="report.description"
+      name="description"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="lat">קו רוחב:</label>
+    <input
+      type="number"
+      id="lat"
+      class="form-control"
+      [(ngModel)]="report.lat"
+      name="lat"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="lng">קו גובה:</label>
+    <input
+      type="number"
+      id="lng"
+      class="form-control"
+      [(ngModel)]="report.lng"
+      name="lng"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="time">זמן:</label>
+    <input
+      type="datetime-local"
+      id="time"
+      class="form-control"
+      [(ngModel)]="report.time"
+      name="time"
+      [value]="report"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="id">ID:</label>
+    <input
+      type="number"
+      id="id"
+      class="form-control"
+      [(ngModel)]="report.id"
+      name="id"
+      required
+    />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

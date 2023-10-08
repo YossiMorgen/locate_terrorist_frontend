@@ -1,0 +1,13 @@
+.reportForm {
+  width: 350px;
+  padding: .5rem;
+  
+  background-color: #fff;
+  border-radius: 20px;
+}
+.reportFormHead {
+    /* margin-right: auto; */
+  display: flex;
+  justify-content: end;
+  width: 100%;
+}

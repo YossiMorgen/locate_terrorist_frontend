@@ -68,6 +68,7 @@ import { RequestInterceptor } from './utils/request/request.interceptor';
 import { ResponseInterceptor } from './utils/response/response.interceptor';
 import { MapComponent } from './components/map-area/map/map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { NewReportFormComponent } from './new-report-form/new-report-form.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     LoginComponent,
     HomeComponent,
     PageNotFoundComponent,
-    MapComponent
+    MapComponent,
+    NewReportFormComponent
   ],
   imports: [
     MatAutocompleteModule,
