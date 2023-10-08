@@ -1,5 +1,7 @@
+import { ReportType } from "./type-enum";
+
 export class ReportModel {
-  public type: string;
+  public type: ReportType;
   public description: string;
   public lat: number;
   public lng: number;

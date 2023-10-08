@@ -10,7 +10,7 @@ import CredentialsModel from 'src/app/models/credentials-model';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
   hide = true;
 
@@ -22,20 +22,20 @@ export class LoginComponent implements OnInit {
   ) {}
 
   public loginForm = this.formBuilder.group({
-    userName : ['', [Validators.required]],
-    password : ['', [Validators.required]]
+    username : ['a', [Validators.required]],
+    password : ['b', [Validators.required]]
   })
 
-  ngOnInit(): void {
-    console.log(this.router.url);
-  }
-
-  public async login():Promise<void>{       
-    try {
-      await this.auth.login(this.loginForm.value as CredentialsModel);
-      this.router.navigateByUrl('/home');
-    } catch (error: any) {
-      this.toast.error(error);
-    }
+  public async login():Promise<void>{ 
+    console.log(this.loginForm.value);
+    console.log(this.loginForm.value as CredentialsModel);
+    
+    await this.auth.login({username: 'a', password: 'b'} as CredentialsModel);
+    // try {
+    //   await this.auth.login(this.loginForm.value as CredentialsModel);
+    //   this.router.navigateByUrl('/home');
+    // } catch (error: any) {
+    //   this.toast.error(error);
+    // }
   }
 }

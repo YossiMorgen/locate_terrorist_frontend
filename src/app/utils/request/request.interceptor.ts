@@ -16,11 +16,14 @@ export class RequestInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    request = request.clone({
-      setHeaders: {
-        cookie: this.auth.getToken()
-      }
-    });
+    const token  = this.auth.getToken();
+    if(token){
+      request = request.clone({
+        setHeaders: {
+          cookie: token
+        }
+      });
+    }
 
     return next.handle(request);
   }

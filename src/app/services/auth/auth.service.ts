@@ -14,7 +14,7 @@ export class AuthService {
 
   public userChanges = new Subject<void>();
 
-  private token: string;
+  private token: string = null;
 
   constructor( 
       private http: HttpClient, 
@@ -25,13 +25,12 @@ export class AuthService {
     const token = window.localStorage.getItem('token')
   }
 
-  public async login( credentials: CredentialsModel ): Promise<void> {
-
-    const observable = this.http.post<any>( this.config.login, credentials );    
-    console.log(observable);
-    const response = await firstValueFrom( observable );
-    
-    
+  public async login( credentials: CredentialsModel): Promise<void> {
+    const observable = this.http.post<string>( this.config.login, credentials );    
+    const token = await firstValueFrom(observable);
+    window.localStorage.setItem('token', token );
+    this.token = token;
+    this.router.navigate(['/reports']);
   }
 
   public logout():void{        
@@ -41,19 +40,10 @@ export class AuthService {
   }
 
   public isLoggedIn():boolean{
-      if(this.token && this.token != ''){
-          const decode = jwtDecode( this.token ) as any;
-          if(decode.exp < Date.now() / 1000) {                
-              this.toast.error('Your session has expired, please login again');
-              this.logout();
-              return false;
-          }
-          return true
-      }
-
-      return false;
+      return this.token != null;
   }
 
   public getToken():string{
       return this.token;
-  }}
+  }
+}

@@ -4,10 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AppConfigService {
-  public baseURI = 'https://silver-swords.israelcentral.cloudapp.azure.com/';
+  public baseURI = 'https://silver-swords.northeurope.cloudapp.azure.com/api/';
   
-  public auth = `${this.baseURI}auth/`;
-  public login = `${this.auth}login`;
+  public login = `${this.baseURI}login`;
 
   public createReports = `${this.baseURI}create`;
   public reports = `${this.baseURI}reports/all`;
