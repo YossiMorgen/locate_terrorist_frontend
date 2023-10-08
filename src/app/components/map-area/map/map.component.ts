@@ -2,6 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import * as Leaflet from 'leaflet'; 
 import { ReportModel } from 'src/app/models/reports-model';
 import { ReportsService } from 'src/app/services/reports/reports.service';
+import { ToastifyNotificationsService } from 'src/app/services/toastify-notifications/toastify-notifications.service';
 
 @Component({
   selector: 'app-map',
@@ -12,7 +13,10 @@ export class MapComponent {
   map!: Leaflet.Map;
   markers: Leaflet.Marker[] = [];
 
-  constructor(public reportsService: ReportsService) {};
+  constructor(
+    public reportsService: ReportsService,
+    public toastify: ToastifyNotificationsService
+  ) {};
 
   options = {
     layers: [
@@ -24,19 +28,18 @@ export class MapComponent {
     center: { lat: 28.626137, lng: 79.821603 }
   }
 
-  initMarkers() {    
-    let initialMarkers = [
-      new ReportModel({ type: '1', description: 'Marker', lat: 28.625485, lng: 79.821603, time: new Date(), id: 1 }),
-      new ReportModel({ type: '1', description: 'Marker', lat: 28.626137, lng: 79.821603, time: new Date(), id: 2 }),
-      new ReportModel({ type: '1', description: 'Marker', lat: 28.626137, lng: 79.820603, time: new Date(), id: 3 }),
-    ];
-
-    initialMarkers = initialMarkers.map((marker) => {
+  async initMarkers() {    
+    try {
+      await this.reportsService.getReports();
+    } catch (error: any) {
+      this.toastify.error(error.message);
+    }
+    let initialMarkers = this.reportsService.reports.map((report: ReportModel) => { 
       return {
-        position: new Leaflet.LatLng(marker.lat, marker.lng),
+        position: new Leaflet.LatLng(report.lat, report.lng),
         draggable: false,
-        id: marker.id,
-        ...marker
+        id: report.id,
+        ...report
       }
     });
 

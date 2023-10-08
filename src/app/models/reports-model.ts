@@ -6,11 +6,6 @@ export class ReportModel {
     public lng: number;
     public time: Date;
     public id: number;
-    public position: {
-        lat: number,
-        lng: number
-    }
-    public draggable: true;
 
     constructor(reportModel?: ReportModel) {
         {
