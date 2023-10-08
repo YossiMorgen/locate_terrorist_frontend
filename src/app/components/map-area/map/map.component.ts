@@ -9,7 +9,7 @@ import { ToastifyNotificationsService } from 'src/app/services/toastify-notifica
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent {
+export class MapComponent implements AfterViewInit {
   map!: Leaflet.Map;
   markers: Leaflet.Marker[] = [];
 
@@ -18,15 +18,22 @@ export class MapComponent {
     public toastify: ToastifyNotificationsService
   ) {}
 
-  options = {
+  options: Leaflet.MapOptions = {
     layers: [
       Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       })
     ],
-    zoom: 16,
+    zoom: 0,
     center: { lat: 28.626137, lng: 79.821603 }
   };
+
+  ngAfterViewInit(): void {
+    this.map?.setZoom(0);
+    setTimeout(() => {
+      this.map?.setZoom(8.5);
+    }, 0);
+  }
 
   async initMarkers() {
     try {
@@ -68,7 +75,7 @@ export class MapComponent {
     this.initMarkers();
   }
 
-  mapClicked($event: any) {
+  mapClicked($event: Leaflet.LeafletMouseEvent) {
     console.log($event.latlng.lat, $event.latlng.lng);
   }
 

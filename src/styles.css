@@ -2,6 +2,7 @@
   box-sizing: border-box;
 }
 
+main,
 html,
 body,
 .layout {
@@ -13,6 +14,7 @@ body,
   margin: 0;
   direction: rtl;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  box-sizing: border-box;
 }
 
 .mat-form-field {
@@ -53,4 +55,9 @@ a {
 
 .displayNone {
   display: none;
+}
+
+.pageContainer {
+  width: 100vw;
+  height: 100vh;
 }
