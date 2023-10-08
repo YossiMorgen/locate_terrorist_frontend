@@ -3,8 +3,8 @@
         <mat-card-content>
             <form [formGroup]="loginForm" (ngSubmit)="login()">
                 <mat-form-field>
-                    <input placeholder="שם משתמש" type="text" matInput formControlName="userName">
-                    <mat-error *ngIf="loginForm.controls['userName'].hasError('required')">
+                    <input placeholder="שם משתמש" type="text" matInput formControlName="username">
+                    <mat-error *ngIf="loginForm.controls['username'].hasError('required')">
                         שם משתמש חובה
                     </mat-error>
                 </mat-form-field>

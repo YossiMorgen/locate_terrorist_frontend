@@ -29,29 +29,32 @@ export class MapComponent {
   }
 
   async initMarkers() {    
-    try {
-      await this.reportsService.getReports();
-    } catch (error: any) {
-      this.toastify.error(error.message);
-    }
+    // try {
+    //   await this.reportsService.getReports();
+    // } catch (error: any) {
+    //   this.toastify.error(error.message);
+    //   return;
+    // }
+    this.reportsService.reports = [
+      new ReportModel({ type: "1", description: "2", lat: 30.987051, lng: 34.947929, time: new Date(), id: 1 }),
+      new ReportModel({ type: "1", description: "2", lat: 30.987051, lng: 34.947929, time: new Date(), id: 1 }),
+      new ReportModel({ type: "1", description: "2", lat: 30.987051, lng: 34.947929, time: new Date(), id: 1 }),
+    ]
     let initialMarkers = this.reportsService.reports.map((report: ReportModel) => { 
       return {
         position: new Leaflet.LatLng(report.lat, report.lng),
         draggable: false,
         id: report.id,
-        ...report
       }
     });
 
     for (let index = 0; index < initialMarkers.length; index++) {
       const data = initialMarkers[index];
       const marker = this.generateMarker(data, data.id);
-      marker.addTo(this.map).bindPopup(`<b>${data.lat},  ${data.lng}</b>`);
-      console.log("hi");
-      this.map.panTo({ lat: data.lat, lng: data.lng });
+      marker.addTo(this.map).bindPopup(`<b>${data.position.lat},  ${data.position.lng}</b>`);
+      this.map.panTo({ lat: data.position.lat, lng: data.position.lng });
       this.markers.push(marker);
     }
-    console.log(this.markers);
     
   }
 

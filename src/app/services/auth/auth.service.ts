@@ -26,8 +26,11 @@ export class AuthService {
   }
 
   public async login( credentials: CredentialsModel ): Promise<void> {
-      const observable = this.http.post<string>( this.config.login, credentials );
-      await firstValueFrom(observable);
+
+    const observable = this.http.post<any>( this.config.login, credentials );    
+    console.log(observable);
+    
+    
   }
 
   public logout():void{        
