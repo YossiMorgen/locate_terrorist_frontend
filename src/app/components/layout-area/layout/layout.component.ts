@@ -6,6 +6,6 @@ import { Location } from '@angular/common';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css']
 })
-export class LayoutComponent{
-  constructor(public location: Location) { }
+export class LayoutComponent {
+  constructor(public location: Location) {}
 }
