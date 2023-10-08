@@ -18,11 +18,7 @@ export class RequestInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     request = request.clone({
       setHeaders: {
-<<<<<<< HEAD
-          cookie: this.auth.getToken()
-=======
-        authorization: 'Bearer ' + this.auth.getToken()
->>>>>>> f771355a97365898f0bd4263cdc22976126fc85a
+        cookie: this.auth.getToken()
       }
     });
 

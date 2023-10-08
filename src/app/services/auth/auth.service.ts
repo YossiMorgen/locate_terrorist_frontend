@@ -29,6 +29,7 @@ export class AuthService {
 
     const observable = this.http.post<any>( this.config.login, credentials );    
     console.log(observable);
+    const response = await firstValueFrom( observable );
     
     
   }

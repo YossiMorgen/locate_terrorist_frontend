@@ -1,15 +1,4 @@
 <div class="centerCard">
-<<<<<<< HEAD
-    <mat-card>
-        <mat-card-content>
-            <form [formGroup]="loginForm" (ngSubmit)="login()">
-                <mat-form-field>
-                    <input placeholder="שם משתמש" type="text" matInput formControlName="username">
-                    <mat-error *ngIf="loginForm.controls['username'].hasError('required')">
-                        שם משתמש חובה
-                    </mat-error>
-                </mat-form-field>
-=======
   <mat-card>
     <mat-card-content>
       <form [formGroup]="loginForm" (ngSubmit)="login()">
@@ -26,7 +15,6 @@
             שם משתמש חובה
           </mat-error>
         </mat-form-field>
->>>>>>> f771355a97365898f0bd4263cdc22976126fc85a
 
         <mat-form-field>
           <mat-label>Enter your password</mat-label>
