@@ -8,10 +8,8 @@ import { MapComponent } from './components/map-area/map/map.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [LoggedInService] },
-
   { path: 'login', component: LoginComponent },
   { path: 'reports', component: MapComponent },
-
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
