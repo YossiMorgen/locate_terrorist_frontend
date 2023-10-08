@@ -27,13 +27,13 @@ export class ReportsService {
   }
 
   public async createReport(report: ReportModel): Promise<void> {
-    const observable = this.http.post<ReportModel>( this.config.reports, report );
+    const observable = this.http.post<ReportModel>( this.config.createReports, report );
     const newReport = await firstValueFrom(observable);  
     this.reports.push(newReport);  
   }
 
   public async updateReport(report: ReportModel): Promise<void> {
-    const observable = this.http.put<ReportModel>( `${this.config.reports}${report.id}`, report );
+    const observable = this.http.put<ReportModel>( `${this.config.updateReports}${report.id}`, report );
     const newReport = await firstValueFrom(observable);  
     this.reports = this.reports.map(report => {
       if(report.id === newReport.id){
@@ -44,7 +44,7 @@ export class ReportsService {
   }
 
   public async deleteReport(id: number): Promise<void> {
-    const observable = this.http.delete<ReportModel>( `${this.config.reports}${id}` );
+    const observable = this.http.delete<ReportModel>( `${this.config.deleteReports}${id}` );
     await firstValueFrom(observable);
     this.reports = this.reports.map((report, index) => {
       if(report.id === id){

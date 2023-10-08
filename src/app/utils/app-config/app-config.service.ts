@@ -4,11 +4,14 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AppConfigService {
-  public baseURI = 'http://localhost:3001/api/';
+  public baseURI = 'https://silver-swords.wooden-puppy.xyz/';
   
   public auth = `${this.baseURI}auth/`;
   public login = `${this.auth}login`;
 
-  public reports = `${this.baseURI}reports/`;
+  public createReports = `${this.baseURI}create`;
+  public reports = `${this.baseURI}reports/all`;
+  public deleteReports = `${this.baseURI}delete`;
+  public updateReports = `${this.baseURI}update`;
 
 }

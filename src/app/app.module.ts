@@ -64,6 +64,8 @@ import { LayoutComponent } from './components/layout-area/layout/layout.componen
 import { RequestInterceptor } from './utils/request/request.interceptor';
 import { ResponseInterceptor } from './utils/response/response.interceptor';
 import { MapComponent } from './components/map-area/map/map.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -131,7 +133,8 @@ import { MapComponent } from './components/map-area/map/map.component';
     OverlayModule,
     PortalModule,
     ScrollingModule,
-    DialogModule
+    DialogModule,
+    LeafletModule
   ],
   providers: [
     ToastService,
