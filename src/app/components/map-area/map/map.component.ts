@@ -48,18 +48,12 @@ export class MapComponent implements AfterViewInit {
   }
 
   async initMarkers() {    
-    // try {
-    //   await this.reportsService.getReports();
-    // } catch (error: any) {
-    //   this.toastify.error(error.message);
-    //   return;
-    // }
-
-    this.reportsService.reports = [
-      new ReportModel({ type: 1, description: "2", lat: 30.987051, lng: 34.947929, time: new Date(), id: 1 }),
-      new ReportModel({ type: 2, description: "2", lat: 30.389051, lng: 34.947929, time: new Date(), id: 1 }),
-      new ReportModel({ type: 3, description: "2", lat: 30.583051, lng: 34.947929, time: new Date(), id: 1 }),
-    ]
+    try {
+      await this.reportsService.getReports();
+    } catch (error: any) {
+      this.toastify.error(error.message);
+      return;
+    }
 
     let initialMarkers = this.reportsService.reports.map((report: ReportModel) => { 
       if(this.layer != 0){
@@ -77,7 +71,7 @@ export class MapComponent implements AfterViewInit {
     for (let index = 0; index < initialMarkers.length; index++) {
       const data = initialMarkers[index];
       const marker = this.generateMarker(data, data.id);
-      marker.addTo(this.map).bindPopup(`<b>${this.layers[data.type].name}</b>`);
+      marker.addTo(this.map).bindPopup(`<b>${data.amount || 1} ${this.layers[data.type].name}</b>`);
       this.map.panTo({ lat: data.position.lat, lng: data.position.lng });
       this.markers.push(marker);
     }

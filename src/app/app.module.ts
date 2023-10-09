@@ -6,6 +6,8 @@ import {
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
   MatFormFieldModule
 } from '@angular/material/form-field';
+import {BidiModule} from '@angular/cdk/bidi';
+
 import { MatInputModule } from '@angular/material/input';
 import { A11yModule } from '@angular/cdk/a11y';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
@@ -68,6 +70,7 @@ import { RequestInterceptor } from './utils/request/request.interceptor';
 import { ResponseInterceptor } from './utils/response/response.interceptor';
 import { MapComponent } from './components/map-area/map/map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { ReportCardComponent } from './components/map-area/report-card/report-card.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +79,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     LoginComponent,
     HomeComponent,
     PageNotFoundComponent,
-    MapComponent
+    MapComponent,
+    ReportCardComponent
   ],
   imports: [
     MatAutocompleteModule,

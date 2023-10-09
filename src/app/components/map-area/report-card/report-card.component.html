@@ -1,0 +1,10 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>{{ reportTypes[report.type] }}</mat-card-title>
+        <mat-card-subtitle> דווח בשעה: {{ report.time | date }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <p>{{ report.description }}</p>
+        <p>קישור למפות: <a href="https://www.google.com/maps/search/?api=1&query={{ report.lat }},{{ report.lng }}">View on Google Maps</a></p>
+    </mat-card-content>
+</mat-card>

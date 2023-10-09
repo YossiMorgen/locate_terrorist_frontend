@@ -7,6 +7,7 @@ export class ReportModel {
   public lng: number;
   public time: Date;
   public id: number;
+  public amount: number;  
 
   constructor(reportModel?: ReportModel) {
     {
@@ -16,6 +17,7 @@ export class ReportModel {
       this.lng = reportModel.lng;
       this.time = reportModel.time;
       this.id = reportModel.id;
+      this.amount = reportModel.amount;
     }
   }
 }
