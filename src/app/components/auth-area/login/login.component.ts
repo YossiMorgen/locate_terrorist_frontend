@@ -22,20 +22,16 @@ export class LoginComponent {
   ) {}
 
   public loginForm = this.formBuilder.group({
-    username : ['a', [Validators.required]],
-    password : ['b', [Validators.required]]
+    username : ['admin', [Validators.required]],
+    password : ['LJ!L6e$s8Za3h2XnEfhM', [Validators.required]]
   })
 
   public async login():Promise<void>{ 
-    console.log(this.loginForm.value);
-    console.log(this.loginForm.value as CredentialsModel);
-    
-    await this.auth.login({username: 'a', password: 'b'} as CredentialsModel);
-    // try {
-    //   await this.auth.login(this.loginForm.value as CredentialsModel);
-    //   this.router.navigateByUrl('/home');
-    // } catch (error: any) {
-    //   this.toast.error(error);
-    // }
+    try {
+      await this.auth.login(this.loginForm.value as CredentialsModel);
+      this.router.navigateByUrl('/reports');
+    } catch (error: any) {
+      this.toast.error(error);
+    }
   }
 }
