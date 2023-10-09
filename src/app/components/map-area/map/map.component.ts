@@ -6,6 +6,7 @@ import { ReportType } from 'src/app/models/type-enum';
 import { ReportsService } from 'src/app/services/reports/reports.service';
 import { ToastifyNotificationsService } from 'src/app/services/toastify-notifications/toastify-notifications.service';
 import { ReportFormComponent } from '../report-form/report-form.component';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-map',
@@ -27,7 +28,8 @@ export class MapComponent implements AfterViewInit {
   constructor(
     public reportsService: ReportsService,
     public dialog: MatDialog,
-    public toastify: ToastifyNotificationsService
+    public toastify: ToastifyNotificationsService,
+    public auth: AuthService
   ) {}
 
   options: Leaflet.MapOptions = {
@@ -97,24 +99,32 @@ export class MapComponent implements AfterViewInit {
   }
 
   mapClicked($event: Leaflet.LeafletMouseEvent) {
-    let rep = new ReportModel();
-    rep.lat = $event.latlng.lat;
-    rep.lng = $event.latlng.lng;
-    this.showDialog(rep);
+    if(this.auth.role == 'admin'){
+      let rep = new ReportModel();
+      rep.lat = $event.latlng.lat;
+      rep.lng = $event.latlng.lng;
+      this.showDialog(rep);
+    }
   }
 
   
   markerClicked($event: any, index: number) {
     const report = this.reportsService.reports.find((report) => report.id === index);
-    this.showDialog(report);
+    if(this.auth.role != 'admin'){
+    this.reportsService.reportChanges.next(report);
+    } else {
+      this.showDialog(report);
+    }
   }
 
-  markerDragEnd($event: any, id: number) {    
-    const report = this.reportsService.reports.find((report) => report.id === id);
-    const latlng = $event.target.getLatLng()
-    report.lat = latlng.lat;
-    report.lng = latlng.lng;
-    this.showDialog(report);
+  markerDragEnd($event: any, id: number) { 
+    if(this.auth.role == 'admin'){
+      const report = this.reportsService.reports.find((report) => report.id === id);
+      const latlng = $event.target.getLatLng()
+      report.lat = latlng.lat;
+      report.lng = latlng.lng;
+      this.showDialog(report);
+    }
   }
 
   getSvgLocation(type: number): string{  

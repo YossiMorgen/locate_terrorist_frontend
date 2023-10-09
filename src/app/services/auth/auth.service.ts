@@ -12,9 +12,8 @@ import jwtDecode from 'jwt-decode';
 })
 export class AuthService {
 
-  public userChanges = new Subject<void>();
-
   private token: string = null;
+  public role: string = 'admin';
 
   constructor( 
       private http: HttpClient, 

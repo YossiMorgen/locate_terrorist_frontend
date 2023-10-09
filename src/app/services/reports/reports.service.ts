@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
 import { ReportModel } from 'src/app/models/reports-model';
 import { AppConfigService } from 'src/app/utils/app-config/app-config.service';
 
@@ -9,6 +9,7 @@ import { AppConfigService } from 'src/app/utils/app-config/app-config.service';
 })
 export class ReportsService {
   public reports: ReportModel[] = [];
+  public reportChanges = new Subject<ReportModel>();
 
   constructor(
     private http: HttpClient,
