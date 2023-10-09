@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReportModel } from 'src/app/models/reports-model';
 import { ReportType } from 'src/app/models/type-enum';
@@ -13,37 +13,40 @@ import { ToastifyNotificationsService } from 'src/app/services/toastify-notifica
 })
 export class ReportFormComponent implements OnInit {
   
+  public formGroup: FormGroup;
+  public reportModel: ReportModel;
+  public reportTypesSelect: string[];
+
   constructor(
-    @Inject(MAT_DIALOG_DATA) public report: ReportModel,
+    @Inject(MAT_DIALOG_DATA) public data: ReportModel,
     public reportService: ReportsService,
     private formBuilder : FormBuilder,
-    private toast: ToastifyNotificationsService
-  ) { }
+    private toast: ToastifyNotificationsService,
+  ) {
+    this.reportModel = data;
+  }
 
-  reportTypesSelect = Object.keys(ReportType).filter((key) => isNaN(Number(key)));
+  ngOnInit() { 
+    this.formGroup = this.formBuilder.group({
+      type: [this.reportModel.type || 1, [Validators.required]],
+      description: [this.reportModel.description || ' '],
+      lat: [this.reportModel.lat, [Validators.required]],
+      lng: [this.reportModel.lng, [Validators.required]],
+      report_amount: [this.reportModel.report_amount || 1, [Validators.required,  Validators.pattern('([0-9]+)')]],
+      time: [this.reportModel.time || new Date()],
+      id: [this.reportModel.id || null]
+    });
 
-  reportForm = this.formBuilder.group({
-    type: [this.report.type || 1, [Validators.required]],
-    description: [this.report.description || ' '],
-    lat: [this.report.lat, [Validators.required]],
-    lng: [this.report.lng, [Validators.required]],
-    report_amount: [this.report.report_amount || 1, [Validators.required,  Validators.pattern('([0-9]+)')]],
-    time: [this.report.time || new Date()],
-    id: [this.report.id || null]
-  });
-
-  ngOnInit(): void {
-    console.log(this.report);
+    this.reportTypesSelect = Object.keys(ReportType).filter((key) => isNaN(Number(key)));
   }
 
   submitReport() {
-
     try {
-      if(this.report.id){
-        this.reportService.updateReport(this.reportForm.value as ReportModel);
+      if(this.data.id){
+        this.reportService.updateReport(this.formGroup.value as ReportModel);
         this.toast.success('הדיווח עודכן בהצלחה');
       } else {
-        this.reportService.createReport(this.reportForm.value as ReportModel);
+        this.reportService.createReport(this.formGroup.value as ReportModel);
         this.toast.success('הדיווח נשלח בהצלחה');
       }
     } catch (error: any) {

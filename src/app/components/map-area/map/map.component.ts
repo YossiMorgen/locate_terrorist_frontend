@@ -1,8 +1,7 @@
-import { AfterViewInit, Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { AfterViewInit, Component, NgZone } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as Leaflet from 'leaflet';
 import { ReportModel } from 'src/app/models/reports-model';
-import { ReportType } from 'src/app/models/type-enum';
 import { ReportsService } from 'src/app/services/reports/reports.service';
 import { ToastifyNotificationsService } from 'src/app/services/toastify-notifications/toastify-notifications.service';
 import { ReportFormComponent } from '../report-form/report-form.component';
@@ -21,13 +20,14 @@ export class MapComponent implements AfterViewInit {
     { name : 'הכל'},
     { name: 'טרוריסטים', icon: this.getSvgLocation(1), enabled: true },
     { name: 'אזרחים', icon: this.getSvgLocation(2), enabled: true },
-  ]
-  
+  ];
+
 
   constructor(
     public reportsService: ReportsService,
     public dialog: MatDialog,
-    public toastify: ToastifyNotificationsService
+    public toastify: ToastifyNotificationsService,
+    private zone: NgZone
   ) {}
 
   options: Leaflet.MapOptions = {
@@ -139,14 +139,20 @@ export class MapComponent implements AfterViewInit {
   public showDialog(report: ReportModel) {
     console.log(report);
     
-    const dialogRef = this.dialog.open(ReportFormComponent, {
-      width: '45vh',
-      enterAnimationDuration: '300',
-      exitAnimationDuration: '200',
-      data: report
+    let dialogRef: MatDialogRef<any>;
+
+    this.zone.run(() => {
+      dialogRef = this.dialog.open(ReportFormComponent, {
+        width: '45vh',
+        enterAnimationDuration: '300',
+        exitAnimationDuration: '200',
+        data: report
+      });      
     });
+
     dialogRef.afterClosed().subscribe(async (result: any) => {
       // update the reports array
     });
+
   }
 }
