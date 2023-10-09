@@ -2,3 +2,9 @@ h2 {
     display: flex;
     justify-content: center;
 }
+
+.buttons{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}

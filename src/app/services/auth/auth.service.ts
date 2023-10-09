@@ -12,24 +12,22 @@ import jwtDecode from 'jwt-decode';
 })
 export class AuthService {
 
-  public userChanges = new Subject<void>();
-
   private token: string = null;
+  public role: number = 2;
 
   constructor( 
       private http: HttpClient, 
       private config: AppConfigService, 
       private router : Router,
   ){ 
-    this.token = window.localStorage.getItem('token') || null;
+    const token = window.localStorage.getItem('token') || null;
+    if( token ) this.setUser(token)
   }
 
   public async login( credentials: CredentialsModel): Promise<void> {
     const observable = this.http.post<string>( this.config.login, credentials );    
     const token = await firstValueFrom(observable);
-    window.localStorage.setItem('token', token );
-    this.token = token;
-    this.router.navigate(['/reports']);
+    this.setUser(token);
   }
 
   public logout():void{        
@@ -44,5 +42,13 @@ export class AuthService {
 
   public getToken():string{
       return this.token;
+  }
+
+  private setUser(token: string):void{
+    this.token = token;
+    window.localStorage.setItem('token', token );
+    const decode: any = jwtDecode( token )
+    console.log(decode);
+    this.role = decode.role;  
   }
 }

@@ -11,6 +11,6 @@ export class AppConfigService {
 
   public createReports = `${this.baseURI}create`;
   public reports = `${this.baseURI}reports/all`;
-  public deleteReports = `${this.baseURI}delete`;
+  public deleteReports = `${this.baseURI}delete/`;
   public updateReports = `${this.baseURI}update`;
 }

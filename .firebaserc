@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "locateterrorists": {
+      "hosting": {
+        "locate_terrorists_front": [
+          "locateterrorists"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "locateterrorists"
+  }
+}

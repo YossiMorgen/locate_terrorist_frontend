@@ -23,13 +23,13 @@ export class LoginComponent {
 
   public loginForm = this.formBuilder.group({
     username : ['admin', [Validators.required]],
-    password : ['admin', [Validators.required]]
+    password : ['LJ!L6e$s8Za3h2XnEfhM', [Validators.required]]
   })
 
   public async login():Promise<void>{ 
     try {
       await this.auth.login(this.loginForm.value as CredentialsModel);
-      this.router.navigateByUrl('/reports');
+      // this.router.navigateByUrl('/reports');
     } catch (error: any) {
       this.toast.error(error);
     }

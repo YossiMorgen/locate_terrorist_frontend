@@ -10,11 +10,13 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { ToastService } from 'angular-toastify';
 import { tap } from 'rxjs';
+import { ToastifyNotificationsService } from 'src/app/services/toastify-notifications/toastify-notifications.service';
 
 @Injectable()
 export class ResponseInterceptor implements HttpInterceptor {
   constructor(
     private auth: AuthService,
+    private toast: ToastifyNotificationsService
   ) {}
 
   intercept(
@@ -28,7 +30,8 @@ export class ResponseInterceptor implements HttpInterceptor {
         },
         error: (error: any) => {
           if (error.status === 401) {
-            // this.auth.logout();
+            this.toast.error('פג תוקף ההתחברות אנא התחבר מחדש');
+            this.auth.logout();
           }
         }
       })

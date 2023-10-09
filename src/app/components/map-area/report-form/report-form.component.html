@@ -1,7 +1,7 @@
 <div class="ReportForm">
     
     <div class="header">
-        <h2>{{reportModel.id == 0 ? 'הוסף ' : 'עדכן '}} דיווח</h2>
+        <h2>{{!reportModel.id ? 'הוסף ' : 'עדכן '}} דיווח</h2>
     </div>
 
     <form *ngIf="formGroup" (ngSubmit)="submitReport()" [formGroup]="formGroup">
@@ -21,15 +21,18 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill">
-            <mat-label >כמות אנשים \ מלוכלכים</mat-label>
+            <mat-label >כמות אנשים</mat-label>
             <input 
                 matInput 
                 formControlName="report_amount" 
             >
         </mat-form-field>
 
-        <button type="submit" mat-raised-button color="primary" [disabled]="formGroup.invalid" >{{reportModel.id ? 'עדכן' : 'הוסף'}}</button>
+        <div class="buttons">
+            <button type="submit" mat-raised-button color="primary" [disabled]="formGroup.invalid" >{{reportModel.id ? 'עדכן' : 'הוסף'}}</button>
+            <button type="button" mat-raised-button color="warn" (click)="cancelReport()" >מחק</button>
+        </div>
 
-        <span *ngIf="reportModel.id">שעת דיווח ראשוני: {{reportModel.time | date:'dd/MM hh:mm'}}</span>
+        <span *ngIf="reportModel.id">שעת דיווח ראשוני: {{reportModel.created_at | date:'dd/MM hh:mm'}}</span>
     </form>
 </div> 

@@ -5,6 +5,7 @@ import { ReportModel } from 'src/app/models/reports-model';
 import { ReportsService } from 'src/app/services/reports/reports.service';
 import { ToastifyNotificationsService } from 'src/app/services/toastify-notifications/toastify-notifications.service';
 import { ReportFormComponent } from '../report-form/report-form.component';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-map',
@@ -27,7 +28,8 @@ export class MapComponent implements AfterViewInit {
     public reportsService: ReportsService,
     public dialog: MatDialog,
     public toastify: ToastifyNotificationsService,
-    private zone: NgZone
+    private zone: NgZone,
+    public auth: AuthService
   ) {}
 
   options: Leaflet.MapOptions = {
@@ -97,24 +99,32 @@ export class MapComponent implements AfterViewInit {
   }
 
   mapClicked($event: Leaflet.LeafletMouseEvent) {
-    let rep = new ReportModel();
-    rep.lat = $event.latlng.lat;
-    rep.lng = $event.latlng.lng;
-    this.showDialog(rep);
+    if(this.auth.role == 1){
+      let rep = new ReportModel();
+      rep.lat = $event.latlng.lat;
+      rep.lng = $event.latlng.lng;
+      this.showDialog(rep);
+    }
   }
 
   
   markerClicked($event: any, index: number) {
     const report = this.reportsService.reports.find((report) => report.id === index);
-    this.showDialog(report);
+    if(this.auth.role != 1){
+    this.reportsService.reportChanges.next(report);
+    } else {
+      this.showDialog(report);
+    }
   }
 
-  markerDragEnd($event: any, id: number) {    
-    const report = this.reportsService.reports.find((report) => report.id === id);
-    const latlng = $event.target.getLatLng()
-    report.lat = latlng.lat;
-    report.lng = latlng.lng;
-    this.showDialog(report);
+  markerDragEnd($event: any, id: number) { 
+    if(this.auth.role == 1){
+      const report = this.reportsService.reports.find((report) => report.id === id);
+      const latlng = $event.target.getLatLng()
+      report.lat = latlng.lat;
+      report.lng = latlng.lng;
+      this.showDialog(report);
+    }
   }
 
   getSvgLocation(type: number): string{  
@@ -151,7 +161,9 @@ export class MapComponent implements AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe(async (result: any) => {
-      // update the reports array
+      if(result){
+        this.changeLayer(this.layer);
+      }
     });
 
   }
