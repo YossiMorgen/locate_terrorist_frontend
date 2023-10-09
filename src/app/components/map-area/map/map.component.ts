@@ -71,7 +71,7 @@ export class MapComponent implements AfterViewInit {
     for (let index = 0; index < initialMarkers.length; index++) {
       const data = initialMarkers[index];
       const marker = this.generateMarker(data, data.id);
-      marker.addTo(this.map).bindPopup(`<b>${data.amount || 1} ${this.layers[data.type].name}</b>`);
+      marker.addTo(this.map).bindPopup(`<b>${data.amount || ''} ${this.layers[data.type].name}</b>`);
       this.map.panTo({ lat: data.position.lat, lng: data.position.lng });
       this.markers.push(marker);
     }
@@ -100,7 +100,7 @@ export class MapComponent implements AfterViewInit {
 
   markerClicked($event: any, id: number) {
     console.log($event.latlng.lat, $event.latlng.lng);
-  }
+  } 
 
   markerDragEnd($event: any, id: number) {
     console.log($event.target.getLatLng());
