@@ -1,9 +1,11 @@
 import { AfterViewInit, Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import * as Leaflet from 'leaflet';
 import { ReportModel } from 'src/app/models/reports-model';
 import { ReportType } from 'src/app/models/type-enum';
 import { ReportsService } from 'src/app/services/reports/reports.service';
 import { ToastifyNotificationsService } from 'src/app/services/toastify-notifications/toastify-notifications.service';
+import { ReportFormComponent } from '../report-form/report-form.component';
 
 @Component({
   selector: 'app-map',
@@ -19,12 +21,12 @@ export class MapComponent implements AfterViewInit {
     { name : 'הכל'},
     { name: 'טרוריסטים', icon: this.getSvgLocation(1), enabled: true },
     { name: 'אזרחים', icon: this.getSvgLocation(2), enabled: true },
-    { name: 'אחר', icon: this.getSvgLocation(3), enabled: true},
   ]
   
 
   constructor(
     public reportsService: ReportsService,
+    public dialog: MatDialog,
     public toastify: ToastifyNotificationsService
   ) {}
 
@@ -71,7 +73,7 @@ export class MapComponent implements AfterViewInit {
     for (let index = 0; index < initialMarkers.length; index++) {
       const data = initialMarkers[index];
       const marker = this.generateMarker(data, data.id);
-      marker.addTo(this.map).bindPopup(`<b>${data.amount || ''} ${this.layers[data.type].name}</b>`);
+      marker.addTo(this.map).bindPopup(`<b>${data.report_amount || ''} ${this.layers[data.type].name}</b>`);
       this.map.panTo({ lat: data.position.lat, lng: data.position.lng });
       this.markers.push(marker);
     }
@@ -95,15 +97,24 @@ export class MapComponent implements AfterViewInit {
   }
 
   mapClicked($event: Leaflet.LeafletMouseEvent) {
-    console.log($event.latlng.lat, $event.latlng.lng);
+    let rep = new ReportModel();
+    rep.lat = $event.latlng.lat;
+    rep.lng = $event.latlng.lng;
+    this.showDialog(rep);
   }
 
-  markerClicked($event: any, id: number) {
-    console.log($event.latlng.lat, $event.latlng.lng);
-  } 
+  
+  markerClicked($event: any, index: number) {
+    const report = this.reportsService.reports.find((report) => report.id === index);
+    this.showDialog(report);
+  }
 
-  markerDragEnd($event: any, id: number) {
-    console.log($event.target.getLatLng());
+  markerDragEnd($event: any, id: number) {    
+    const report = this.reportsService.reports.find((report) => report.id === id);
+    const latlng = $event.target.getLatLng()
+    report.lat = latlng.lat;
+    report.lng = latlng.lng;
+    this.showDialog(report);
   }
 
   getSvgLocation(type: number): string{  
@@ -111,7 +122,6 @@ export class MapComponent implements AfterViewInit {
       '<svg style="color: red; width: 40px; position: absolute; bottom: 0; left: -20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="red" d="M288 896h448q32 0 32 32t-32 32H288q-32 0-32-32t32-32z"></path><path fill="red" d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416zM512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544z"></path><path fill="red" d="M544 384h96a32 32 0 1 1 0 64h-96v96a32 32 0 0 1-64 0v-96h-96a32 32 0 0 1 0-64h96v-96a32 32 0 0 1 64 0v96z"></path></svg>',
       '<svg style="color: blue; width: 40px; position: absolute; bottom: 0; left: -20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="blue" d="M288 896h448q32 0 32 32t-32 32H288q-32 0-32-32t32-32z"></path><path fill="blue" d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416zM512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544z"></path><path fill="blue" d="M544 384h96a32 32 0 1 1 0 64h-96v96a32 32 0 0 1-64 0v-96h-96a32 32 0 0 1 0-64h96v-96a32 32 0 0 1 64 0v96z"></path></svg>',
       '<svg style="width: 40px; position: absolute; bottom: 0; left: -20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M288 896h448q32 0 32 32t-32 32H288q-32 0-32-32t32-32z"/><path fill="currentColor" d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416zM512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544z"/><path fill="currentColor" d="M544 384h96a32 32 0 1 1 0 64h-96v96a32 32 0 0 1-64 0v-96h-96a32 32 0 0 1 0-64h96v-96a32 32 0 0 1 64 0v96z"/></svg>',
-      '<svg style="width: 40px; position: absolute; bottom: 0; left: -20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M288 896h448q32 0 32 32t-32 32H288q-32 0-32-32t32-32z"/><path fill="currentColor" d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416zM512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544z"/><path fill="currentColor" d="M544 384h96a32 32 0 1 1 0 64h-96v96a32 32 0 0 1-64 0v-96h-96a32 32 0 0 1 0-64h96v-96a32 32 0 0 1 64 0v96z"/></svg>'
     ]  
     
     return svgArray[type - 1];
@@ -119,7 +129,6 @@ export class MapComponent implements AfterViewInit {
 
   changeLayer(index: number){
     this.layer = index;
-    console.log(this.layer);
     this.markers.forEach((marker) => {  
       this.map.removeLayer(marker);
     });
@@ -127,4 +136,17 @@ export class MapComponent implements AfterViewInit {
     this.initMarkers();
   }
 
+  public showDialog(report: ReportModel) {
+    console.log(report);
+    
+    const dialogRef = this.dialog.open(ReportFormComponent, {
+      width: '45vh',
+      enterAnimationDuration: '300',
+      exitAnimationDuration: '200',
+      data: report
+    });
+    dialogRef.afterClosed().subscribe(async (result: any) => {
+      // update the reports array
+    });
+  }
 }

@@ -1,0 +1,36 @@
+<div class="ReportForm">
+    
+    <!-- <div class="header">
+        <h2>{{report.id == 0 ? 'הוסף ' : 'עדכן '}} דיווח</h2>
+    </div> -->
+
+    <form (ngSubmit)="submitReport()" [formGroup]="reportForm">
+
+    <mat-form-field appearance="fill">
+        <mat-label>סוג הדיווח</mat-label>
+            <mat-select formControlName="type">
+                <mat-option *ngFor="let t of reportTypesSelect; let i = index" [value]="i + 1">{{t}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label >תיאור אירוע</mat-label>
+            <textarea 
+                matInput 
+                formControlName="description" 
+            ></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label >כמות אנשים \ מלוכלכים</mat-label>
+            <input 
+                matInput 
+                formControlName="report_amount" 
+            >
+        </mat-form-field>
+
+        <button type="submit" mat-button [disabled]="reportForm.invalid" >{{!report.id ? 'הוסף ' : 'עדכן '}}</button>
+
+        <!-- <span ngIf="report.id">שעת דיווח ראשוני: {{report.time}}</span> -->
+    </form>
+</div> 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ReportModel } from 'src/app/models/reports-model';
 import { ReportType } from 'src/app/models/type-enum';
 
@@ -8,13 +8,15 @@ import { ReportType } from 'src/app/models/type-enum';
   styleUrls: ['./report-card.component.css']
 })
 export class ReportCardComponent implements OnInit {
-  report = new ReportModel({ type: 1, amount: 2, description: "2", lat: 30.987051, lng: 34.947929, time: new Date(), id: 1 });
+  report = new ReportModel({ type: 1, report_amount: 2, description: "2", lat: 30.987051, lng: 34.947929, time: new Date(), id: 1 });
   reportTypes = Object.keys(ReportType).filter((reportType) => isNaN(Number(reportType)));
 
-  constructor() { }
-
+  constructor(private ref: ChangeDetectorRef) {
+    setInterval(() => {
+      this.ref.markForCheck();
+    }, 100);
+  }
   ngOnInit(): void {
-      console.log(this.reportTypes);
-      
+    
   }
 }

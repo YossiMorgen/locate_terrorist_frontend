@@ -20,13 +20,6 @@ export class ReportsService {
     this.reports = await firstValueFrom(observable);
   }
 
-  public async getReportById(id: string): Promise<ReportModel> {
-    const observable = this.http.get<ReportModel>(
-      `${this.config.reports}${id}`
-    );
-    return await firstValueFrom(observable);
-  }
-
   public async createReport(report: ReportModel): Promise<void> {
     const observable = this.http.post<ReportModel>(
       this.config.createReports,
@@ -38,15 +31,15 @@ export class ReportsService {
 
   public async updateReport(report: ReportModel): Promise<void> {
     const observable = this.http.put<ReportModel>(
-      `${this.config.updateReports}${report.id}`,
+      this.config.updateReports,
       report
     );
-    const newReport = await firstValueFrom(observable);
-    this.reports = this.reports.map((report) => {
-      if (report.id === newReport.id) {
-        report = newReport;
+    await firstValueFrom(observable);
+    this.reports = this.reports.map((rep) => {
+      if (rep.id === report.id) {
+        rep = report;
       }
-      return report;
+      return rep;
     });
   }
 

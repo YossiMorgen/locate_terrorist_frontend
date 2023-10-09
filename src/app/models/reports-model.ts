@@ -7,17 +7,17 @@ export class ReportModel {
   public lng: number;
   public time: Date;
   public id: number;
-  public amount: number;  
+  public report_amount: number;  
 
   constructor(reportModel?: ReportModel) {
-    {
+    if(reportModel) {
       this.type = reportModel.type;
       this.description = reportModel.description;
       this.lat = reportModel.lat;
       this.lng = reportModel.lng;
       this.time = reportModel.time;
       this.id = reportModel.id;
-      this.amount = reportModel.amount;
+      this.report_amount = reportModel.report_amount;
     }
   }
 }

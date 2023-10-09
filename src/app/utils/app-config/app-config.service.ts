@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class AppConfigService {
   public baseURI = 'https://silver-swords.northeurope.cloudapp.azure.com/api/';
+  // public baseURI = 'http://localhost:8000/api/';
   
   public login = `${this.baseURI}login`;
 
