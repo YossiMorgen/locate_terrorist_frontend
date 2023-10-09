@@ -1,3 +1,10 @@
 .map-container {
   height: 100%;
 }
+.categoryRadios{
+  padding-right: 100px;
+}
+
+.mat-radio-group:first-child{
+  color: blue !important;
+}

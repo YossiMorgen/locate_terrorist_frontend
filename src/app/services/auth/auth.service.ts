@@ -20,9 +20,8 @@ export class AuthService {
       private http: HttpClient, 
       private config: AppConfigService, 
       private router : Router,
-      private toast: ToastifyNotificationsService
   ){ 
-    const token = window.localStorage.getItem('token')
+    this.token = window.localStorage.getItem('token') || null;
   }
 
   public async login( credentials: CredentialsModel): Promise<void> {

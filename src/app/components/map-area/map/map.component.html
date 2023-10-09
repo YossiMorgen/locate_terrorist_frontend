@@ -1,9 +1,26 @@
-<div class="pageContainer">
-  <div
-    class="map-container"
-    leaflet
-    [leafletOptions]="options"
-    (leafletMapReady)="onMapReady($event)"
-    (leafletClick)="mapClicked($event)"
-  ></div>
+<div class="MapComponent">
+  <div class="categoryRadios">
+    
+    <label  id="categoryRadiosLabel">בחירת קטגוריה</label>
+    <mat-radio-group 
+      (change)="changeLayer(layer)"
+      aria-labelledby="categoryRadiosLabel"
+      class="radio-group"
+      [(ngModel)]="layer">
+      <mat-radio-button class="radio-button" *ngFor="let l of layers; let i = index" [value]="i">
+        {{l.name}}
+      </mat-radio-button>
+    </mat-radio-group>
+    <div>{{layers[layer].name}}</div>
+  </div>
+
+  <div class="pageContainer">
+    <div
+      class="map-container"
+      leaflet
+      [leafletOptions]="options"
+      (leafletMapReady)="onMapReady($event)"
+      (leafletClick)="mapClicked($event)"
+    ></div>
+  </div>
 </div>

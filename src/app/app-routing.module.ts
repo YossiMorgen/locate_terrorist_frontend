@@ -7,10 +7,10 @@ import { LoggedInService } from './utils/logged_in/logged-in.guard';
 import { MapComponent } from './components/map-area/map/map.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent, canActivate: [LoggedInService] },
   { path: 'login', component: LoginComponent },
   { path: 'reports', component: MapComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  // { path: 'reports', component: MapComponent, canActivate: [LoggedInService]  },
+  { path: '', redirectTo: '/reports', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
 

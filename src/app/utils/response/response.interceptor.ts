@@ -15,8 +15,6 @@ import { tap } from 'rxjs';
 export class ResponseInterceptor implements HttpInterceptor {
   constructor(
     private auth: AuthService,
-    private router: Router,
-    private toast: ToastService
   ) {}
 
   intercept(
@@ -30,7 +28,7 @@ export class ResponseInterceptor implements HttpInterceptor {
         },
         error: (error: any) => {
           if (error.status === 401) {
-            this.auth.logout();
+            // this.auth.logout();
           }
         }
       })
