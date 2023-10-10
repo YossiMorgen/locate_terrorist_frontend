@@ -63,9 +63,7 @@ export class MapComponent implements AfterViewInit {
       id: ''
     };
 
-    let initialMarkers = this.reportsService.reports.map((report: ReportModel) => { 
-      console.log(this.layer);
-      
+    let initialMarkers = this.reportsService.reports.map((report: ReportModel) => {       
       if(this.layer != 0){
         if(this.layer != report.type){
           return null;
@@ -88,10 +86,33 @@ export class MapComponent implements AfterViewInit {
     for (let index = 0; index < initialMarkers.length; index++) {
       const data = initialMarkers[index];
       const marker = this.generateMarker(data, data.id);
-      if(data.id == theClosestReport.id){
-        marker.addTo(this.map).bindPopup(`<b>${data.report_amount || ''} ${this.layers[data.type].name}</b>`).openPopup();
+
+      let popupText = '';
+      if(this.auth.role == 1){
+        popupText = `<b>${data.report_amount || ''} ${this.layers[data.type].name}</b>`;
       } else {
-        marker.addTo(this.map).bindPopup(`<b>${data.report_amount || ''} ${this.layers[data.type].name}</b>`);
+        popupText = '';
+        if(this.auth.role == 1){
+          popupText = `<b>${data.report_amount || ''} ${this.layers[data.type].name}</b>`;
+        } else {
+          popupText = `<mat-card *ngIf="report.id">
+                          <mat-card-header>
+                              <mat-card-title>${data.report_amount || ''} ${this.layers[data.type].name}</mat-card-title>
+                          </mat-card-header>
+                          <mat-card-content>
+                              <p>${data.description}</p>
+                              <p>קישור למפות: <a href="https://www.google.com/maps/search/?api=1&query=${data.lat},${data.lng}">View on Google Maps</a></p>
+                              <mat-card-subtitle> דווח בשעה: ${data.time}</mat-card-subtitle>
+                          </mat-card-content>
+                      </mat-card>`;
+        }
+      }
+      
+
+      if(data.id == theClosestReport.id){
+        marker.addTo(this.map).bindPopup(popupText).openPopup();
+      } else {
+        marker.addTo(this.map).bindPopup(popupText);
       }
       this.map.panTo({ lat: data.position.lat, lng: data.position.lng });
       this.markers.push(marker);
@@ -101,15 +122,12 @@ export class MapComponent implements AfterViewInit {
       const markerIcon = Leaflet.divIcon({
         html: this.getSvgLocation(4),
       });
-      // const marker = Leaflet.marker({ lat: lat, lng: lng }, { draggable: false, icon: markerIcon });
-      // marker.addTo(this.map).bindPopup(`<b>המיקום שלך</b>`);
-      // this.markers.push(marker);
-      // focus on the current marker
+      
       const marker = Leaflet.marker({ lat: lat, lng: lng }, { draggable: false, icon: markerIcon });
       marker.addTo(this.map).bindPopup(`<b>המיקום שלך</b>`);
       this.markers.push(marker);
       this.map.panTo({ lat: lat, lng: lng });
-      
+
     }
   }
 
@@ -118,20 +136,20 @@ export class MapComponent implements AfterViewInit {
       html: this.layers[data.type].icon,
     });
 
-    return Leaflet.marker(data.position, { draggable: (this.auth.role == 1 ? true : false), icon: markerIcon })
-      .on('click', (event) => this.markerClicked(event, index))
+    const marker = Leaflet.marker(data.position, { draggable: (this.auth.role == 1 ? true : false), icon: markerIcon })
+    return marker
+      .on('click', (event) => this.markerClicked(event, index, marker))
       .on('dragend', (event) => this.markerDragEnd(event, index));
   }
 
   onMapReady($event: Leaflet.Map) {
     this.map = $event;
     this.map.setView(new Leaflet.LatLng(30.987051, 34.947929), 8);
+    this.updateMarkers();
+    
     
 
-    if(this.auth.role == 1){
-      this.updateMarkers();
-    } else {
-      this.updateMarkers();
+    if(this.auth.role != 1){
       setInterval(async () => {
            
         try {
@@ -172,13 +190,12 @@ export class MapComponent implements AfterViewInit {
   }
 
   
-  markerClicked($event: any, id: string) {
+  markerClicked($event: any, id: string, marker : any) {
     const report = this.reportsService.reports.find((report) => report.id === id);
     if(this.auth.role != 1){
       this.reportsService.reportChanges.next(report);
-      console.log($event);
-      $event.sourceTarget.closePopup();
-      this.map.closePopup();
+      // close marker popup
+      marker.closePopup();      
     } else {
       this.showDialog(report);
     }
@@ -211,7 +228,7 @@ export class MapComponent implements AfterViewInit {
       this.map.removeLayer(marker);
     });
     this.markers = [];
-    this.initMarkers();
+    this.updateMarkers();
   }
 
   public showDialog(report: ReportModel) {
