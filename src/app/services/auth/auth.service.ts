@@ -20,7 +20,7 @@ export class AuthService {
       private config: AppConfigService, 
       private router : Router,
   ){ 
-    const token = window.localStorage.getItem('token') || null;
+    const token = window.sessionStorage.getItem('token') || null;
     if( token ) this.setUser(token)
   }
 
@@ -32,7 +32,7 @@ export class AuthService {
 
   public logout():void{        
       this.token = '';
-      window.localStorage.removeItem('token')
+      window.sessionStorage.removeItem('token')
       this.router.navigate(['/login']);
   }
 
@@ -46,7 +46,7 @@ export class AuthService {
 
   private setUser(token: string):void{
     this.token = token;
-    window.localStorage.setItem('token', token );
+    window.sessionStorage.setItem('token', token );
     const decode: any = jwtDecode( token )
     this.role = decode.role;  
   }

@@ -60,7 +60,7 @@ export class MapComponent implements AfterViewInit {
 
     let theClosestReport = {
       distance: 0,
-      id: 0
+      id: ''
     };
 
     let initialMarkers = this.reportsService.reports.map((report: ReportModel) => { 
@@ -96,7 +96,7 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  generateMarker(data: any, index: number) {    
+  generateMarker(data: any, index: string) {    
     const markerIcon = Leaflet.divIcon({
       html: this.layers[data.type].icon,
     });
@@ -133,8 +133,8 @@ export class MapComponent implements AfterViewInit {
   }
 
   
-  markerClicked($event: any, index: number) {
-    const report = this.reportsService.reports.find((report) => report.id === index);
+  markerClicked($event: any, id: string) {
+    const report = this.reportsService.reports.find((report) => report.id === id);
     if(this.auth.role != 1){
     this.reportsService.reportChanges.next(report);
     } else {
@@ -142,7 +142,7 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  markerDragEnd($event: any, id: number) { 
+  markerDragEnd($event: any, id: string) { 
     if(this.auth.role == 1){
       const report = this.reportsService.reports.find((report) => report.id === id);
       const latlng = $event.target.getLatLng()

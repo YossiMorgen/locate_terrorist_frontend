@@ -6,7 +6,7 @@ export class ReportModel {
   public lat: number;
   public lng: number;
   public time: Date;
-  public id: number;
+  public id: string;
   public report_amount: number;  
 
   constructor(reportModel?: ReportModel) {

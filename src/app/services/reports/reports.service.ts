@@ -44,7 +44,7 @@ export class ReportsService {
     });
   }
 
-  public async deleteReport(id: number): Promise<void> {
+  public async deleteReport(id: string): Promise<void> {
     const observable = this.http.delete<ReportModel>(
       `${this.config.deleteReports}${id}`
     );
