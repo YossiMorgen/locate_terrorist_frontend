@@ -1,19 +1,30 @@
 <div class="MapComponent">
-  <div class="categoryRadios">    
-    <button class="logout" mat-raised-button color="primary" (click)="auth.logout()">התנתק</button>
-    <label  id="categoryRadiosLabel">בחירת קטגוריה</label>
-    <mat-radio-group 
+  <div class="categoryRadios">
+    <button
+      class="logout"
+      mat-raised-button
+      color="primary"
+      (click)="auth.logout()"
+    >
+      התנתק
+    </button>
+    <label id="categoryRadiosLabel">בחירת קטגוריה</label>
+    <mat-radio-group
       (change)="changeLayer(layer)"
       aria-labelledby="categoryRadiosLabel"
       class="radio-group"
-      [(ngModel)]="layer">
-      <mat-radio-button class="radio-button" *ngFor="let l of layers; let i = index" [value]="i">
-        {{l.name}}
+      [(ngModel)]="layer"
+    >
+      <mat-radio-button
+        class="radio-button"
+        *ngFor="let l of layers; let i = index"
+        [value]="i"
+      >
+        {{ l.name }}
       </mat-radio-button>
     </mat-radio-group>
     <!-- <app-report-card *ngIf="auth.role != 1" ></app-report-card> -->
   </div>
-  
 
   <div class="pageContainer">
     <div

@@ -1,38 +1,51 @@
 <div class="ReportForm">
-    
-    <div class="header">
-        <h2>{{!reportModel.id ? 'הוסף ' : 'עדכן '}} דיווח</h2>
+  <div class="header">
+    <h2>{{ !reportModel.id ? "הוסף " : "עדכן " }} דיווח</h2>
+  </div>
+
+  <form *ngIf="formGroup" (ngSubmit)="submitReport()" [formGroup]="formGroup">
+    <mat-form-field appearance="fill">
+      <mat-label>סוג הדיווח</mat-label>
+      <mat-select formControlName="type">
+        <mat-option
+          *ngFor="let t of reportTypesSelect; let i = index"
+          [value]="i + 1"
+          >{{ t }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>תיאור אירוע</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>כמות אנשים</mat-label>
+      <input matInput formControlName="report_amount" />
+    </mat-form-field>
+
+    <div class="buttons">
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="formGroup.invalid"
+      >
+        {{ reportModel.id ? "עדכן" : "הוסף" }}
+      </button>
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="cancelReport()"
+      >
+        מחק
+      </button>
     </div>
 
-    <form *ngIf="formGroup" (ngSubmit)="submitReport()" [formGroup]="formGroup">
-        <mat-form-field appearance="fill">
-            <mat-label>סוג הדיווח</mat-label>
-            <mat-select formControlName="type">
-                <mat-option *ngFor="let t of reportTypesSelect; let i = index" [value]="i + 1">{{t}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
-            <mat-label >תיאור אירוע</mat-label>
-            <textarea 
-                matInput 
-                formControlName="description" 
-            ></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
-            <mat-label >כמות אנשים</mat-label>
-            <input 
-                matInput 
-                formControlName="report_amount" 
-            >
-        </mat-form-field>
-
-        <div class="buttons">
-            <button type="submit" mat-raised-button color="primary" [disabled]="formGroup.invalid" >{{reportModel.id ? 'עדכן' : 'הוסף'}}</button>
-            <button type="button" mat-raised-button color="warn" (click)="cancelReport()" >מחק</button>
-        </div>
-
-        <span *ngIf="reportModel.id">שעת דיווח ראשוני: {{reportModel.time | date:'dd/MM hh:mm'}}</span>
-    </form>
-</div> 
+    <span *ngIf="reportModel.id"
+      >שעת דיווח ראשוני: {{ reportModel.time | date: "dd/MM hh:mm" }}</span
+    >
+  </form>
+</div>
