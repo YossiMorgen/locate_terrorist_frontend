@@ -27,7 +27,7 @@ export class MapComponent implements AfterViewInit {
   constructor(
     public reportsService: ReportsService,
     public dialog: MatDialog,
-    public toastify: ToastifyNotificationsService,
+    public toast: ToastifyNotificationsService,
     private zone: NgZone,
     public auth: AuthService
   ) {}
@@ -43,7 +43,6 @@ export class MapComponent implements AfterViewInit {
   };
 
   ngAfterViewInit(): void {
-    console.log(this.layers);
     
     this.map?.setZoom(0);
     setTimeout(() => {
@@ -51,18 +50,30 @@ export class MapComponent implements AfterViewInit {
     }, 0);
   }
 
-  async initMarkers() {    
+  async initMarkers(lat:number = null, lng:number = null) {    
     try {
       await this.reportsService.getReports();
     } catch (error: any) {
-      this.toastify.error(error.message);
+      this.toast.error(error.message);
       return;
-    }
+    }    
+
+    let theClosestReport = {
+      distance: 0,
+      id: 0
+    };
 
     let initialMarkers = this.reportsService.reports.map((report: ReportModel) => { 
       if(this.layer != 0){
         if(this.layer != report.type){
           return null;
+        }
+      }
+      if(lat && lng){
+        const distance = Math.sqrt(Math.pow(report.lat - lat, 2) + Math.pow(report.lng - lng, 2));
+        if(theClosestReport.distance == 0 || distance < theClosestReport.distance){
+          theClosestReport.distance = distance;
+          theClosestReport.id = report.id;
         }
       }
       return {
@@ -75,11 +86,14 @@ export class MapComponent implements AfterViewInit {
     for (let index = 0; index < initialMarkers.length; index++) {
       const data = initialMarkers[index];
       const marker = this.generateMarker(data, data.id);
-      marker.addTo(this.map).bindPopup(`<b>${data.report_amount || ''} ${this.layers[data.type].name}</b>`);
+      if(lat && lng && data.id == theClosestReport.id){
+        marker.addTo(this.map).bindPopup(`<b>${data.report_amount || ''} ${this.layers[data.type].name}</b>`).openPopup();
+      } else {
+        marker.addTo(this.map).bindPopup(`<b>${data.report_amount || ''} ${this.layers[data.type].name}</b>`);
+      }
       this.map.panTo({ lat: data.position.lat, lng: data.position.lng });
       this.markers.push(marker);
     }
-    console.log(this.markers);
   }
 
   generateMarker(data: any, index: number) {    
@@ -95,7 +109,18 @@ export class MapComponent implements AfterViewInit {
   onMapReady($event: Leaflet.Map) {
     this.map = $event;
     this.map.setView(new Leaflet.LatLng(30.987051, 34.947929), 8);
-    this.initMarkers();
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position)=>{
+        const lon = position.coords.longitude;
+        const lat = position.coords.latitude;
+        this.initMarkers(lat, lon);
+        
+      });
+    } else {
+      this.toast.message('אין גישה למיקום שלך')
+      this.initMarkers();
+    }
   }
 
   mapClicked($event: Leaflet.LeafletMouseEvent) {
@@ -147,7 +172,6 @@ export class MapComponent implements AfterViewInit {
   }
 
   public showDialog(report: ReportModel) {
-    console.log(report);
     
     let dialogRef: MatDialogRef<any>;
 
