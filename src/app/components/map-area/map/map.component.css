@@ -11,6 +11,9 @@
   color: blue !important;
 }
 
+.logout{
+  margin-left: 40px;
+}
 /* desktop */
 @media only screen and (min-width: 768px) {
   .categoryRadios {

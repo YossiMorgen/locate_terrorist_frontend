@@ -1,5 +1,6 @@
 <div class="MapComponent">
   <div class="categoryRadios">    
+    <button class="logout" mat-raised-button color="primary" (click)="auth.logout()">התנתק</button>
     <label  id="categoryRadiosLabel">בחירת קטגוריה</label>
     <mat-radio-group 
       (change)="changeLayer(layer)"
