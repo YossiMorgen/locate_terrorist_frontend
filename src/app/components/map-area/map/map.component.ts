@@ -246,7 +246,9 @@ export class MapComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(async (result: any) => {
       if(result){
-        this.changeLayer(this.layer);
+        setTimeout(() => {
+          this.changeLayer(this.layer);
+        }, 1000);
       }
     });
 
