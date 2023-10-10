@@ -11,9 +11,9 @@
         {{l.name}}
       </mat-radio-button>
     </mat-radio-group>
+    <app-report-card *ngIf="auth.role != 1" ></app-report-card>
   </div>
   
-  <app-report-card *ngIf="auth.role != 1" ></app-report-card>
 
   <div class="pageContainer">
     <div
