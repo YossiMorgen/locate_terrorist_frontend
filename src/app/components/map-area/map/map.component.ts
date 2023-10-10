@@ -64,6 +64,8 @@ export class MapComponent implements AfterViewInit {
     };
 
     let initialMarkers = this.reportsService.reports.map((report: ReportModel) => { 
+      console.log(this.layer);
+      
       if(this.layer != 0){
         if(this.layer != report.type){
           return null;
@@ -86,13 +88,28 @@ export class MapComponent implements AfterViewInit {
     for (let index = 0; index < initialMarkers.length; index++) {
       const data = initialMarkers[index];
       const marker = this.generateMarker(data, data.id);
-      if(lat && lng && data.id == theClosestReport.id){
+      if(data.id == theClosestReport.id){
         marker.addTo(this.map).bindPopup(`<b>${data.report_amount || ''} ${this.layers[data.type].name}</b>`).openPopup();
       } else {
         marker.addTo(this.map).bindPopup(`<b>${data.report_amount || ''} ${this.layers[data.type].name}</b>`);
       }
       this.map.panTo({ lat: data.position.lat, lng: data.position.lng });
       this.markers.push(marker);
+    }
+
+    if(lat && lng && this.auth.role != 1){
+      const markerIcon = Leaflet.divIcon({
+        html: this.getSvgLocation(4),
+      });
+      // const marker = Leaflet.marker({ lat: lat, lng: lng }, { draggable: false, icon: markerIcon });
+      // marker.addTo(this.map).bindPopup(`<b>המיקום שלך</b>`);
+      // this.markers.push(marker);
+      // focus on the current marker
+      const marker = Leaflet.marker({ lat: lat, lng: lng }, { draggable: false, icon: markerIcon });
+      marker.addTo(this.map).bindPopup(`<b>המיקום שלך</b>`);
+      this.markers.push(marker);
+      this.map.panTo({ lat: lat, lng: lng });
+      
     }
   }
 
@@ -101,7 +118,7 @@ export class MapComponent implements AfterViewInit {
       html: this.layers[data.type].icon,
     });
 
-    return Leaflet.marker(data.position, { draggable: data.draggable, icon: markerIcon })
+    return Leaflet.marker(data.position, { draggable: (this.auth.role == 1 ? true : false), icon: markerIcon })
       .on('click', (event) => this.markerClicked(event, index))
       .on('dragend', (event) => this.markerDragEnd(event, index));
   }
@@ -109,16 +126,38 @@ export class MapComponent implements AfterViewInit {
   onMapReady($event: Leaflet.Map) {
     this.map = $event;
     this.map.setView(new Leaflet.LatLng(30.987051, 34.947929), 8);
+    
+
+    if(this.auth.role == 1){
+      this.updateMarkers();
+    } else {
+      this.updateMarkers();
+      setInterval(async () => {
+           
+        try {
+          await this.reportsService.getReports();
+        } catch (error: any) {
+          this.toast.error(error.message);
+          return;
+        }    
+
+        this.updateMarkers()
+      }, 1000 * 60 * 2);
+    }
+    
+  }
+
+  updateMarkers(){
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position)=>{
-        const lon = position.coords.longitude;
-        const lat = position.coords.latitude;
-        this.initMarkers(lat, lon);
+      const lon = position.coords.longitude;
+      const lat = position.coords.latitude;
+      this.initMarkers(lat, lon);
         
       });
     } else {
-      this.toast.message('אין גישה למיקום שלך')
+      this.toast.message('אין גישה למיקום שלך');
       this.initMarkers();
     }
   }
@@ -136,13 +175,16 @@ export class MapComponent implements AfterViewInit {
   markerClicked($event: any, id: string) {
     const report = this.reportsService.reports.find((report) => report.id === id);
     if(this.auth.role != 1){
-    this.reportsService.reportChanges.next(report);
+      this.reportsService.reportChanges.next(report);
+      console.log($event);
+      $event.sourceTarget.closePopup();
+      this.map.closePopup();
     } else {
       this.showDialog(report);
     }
   }
 
-  markerDragEnd($event: any, id: string) { 
+  markerDragEnd($event: any, id: string) {
     if(this.auth.role == 1){
       const report = this.reportsService.reports.find((report) => report.id === id);
       const latlng = $event.target.getLatLng()
@@ -157,6 +199,7 @@ export class MapComponent implements AfterViewInit {
       '<svg style="color: red; width: 40px; position: absolute; bottom: 0; left: -20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="red" d="M288 896h448q32 0 32 32t-32 32H288q-32 0-32-32t32-32z"></path><path fill="red" d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416zM512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544z"></path><path fill="red" d="M544 384h96a32 32 0 1 1 0 64h-96v96a32 32 0 0 1-64 0v-96h-96a32 32 0 0 1 0-64h96v-96a32 32 0 0 1 64 0v96z"></path></svg>',
       '<svg style="color: blue; width: 40px; position: absolute; bottom: 0; left: -20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="blue" d="M288 896h448q32 0 32 32t-32 32H288q-32 0-32-32t32-32z"></path><path fill="blue" d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416zM512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544z"></path><path fill="blue" d="M544 384h96a32 32 0 1 1 0 64h-96v96a32 32 0 0 1-64 0v-96h-96a32 32 0 0 1 0-64h96v-96a32 32 0 0 1 64 0v96z"></path></svg>',
       '<svg style="width: 40px; position: absolute; bottom: 0; left: -20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M288 896h448q32 0 32 32t-32 32H288q-32 0-32-32t32-32z"/><path fill="currentColor" d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416zM512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544z"/><path fill="currentColor" d="M544 384h96a32 32 0 1 1 0 64h-96v96a32 32 0 0 1-64 0v-96h-96a32 32 0 0 1 0-64h96v-96a32 32 0 0 1 64 0v96z"/></svg>',
+      '<svg style="color: yellow; width: 40px; position: absolute; bottom: 0; left: -20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M288 896h448q32 0 32 32t-32 32H288q-32 0-32-32t32-32z"/><path fill="currentColor" d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416zM512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544z"/><path fill="currentColor" d="M544 384h96a32 32 0 1 1 0 64h-96v96a32 32 0 0 1-64 0v-96h-96a32 32 0 0 1 0-64h96v-96a32 32 0 0 1 64 0v96z"/></svg>',
     ]  
     
     return svgArray[type - 1];
