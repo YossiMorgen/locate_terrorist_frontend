@@ -48,7 +48,6 @@ export class AuthService {
     this.token = token;
     window.localStorage.setItem('token', token );
     const decode: any = jwtDecode( token )
-    console.log(decode);
     this.role = decode.role;  
   }
 }

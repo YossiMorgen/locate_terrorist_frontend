@@ -33,6 +33,6 @@
             <button type="button" mat-raised-button color="warn" (click)="cancelReport()" >מחק</button>
         </div>
 
-        <span *ngIf="reportModel.id">שעת דיווח ראשוני: {{reportModel.created_at | date:'dd/MM hh:mm'}}</span>
+        <span *ngIf="reportModel.id">שעת דיווח ראשוני: {{reportModel.time | date:'dd/MM hh:mm'}}</span>
     </form>
 </div> 

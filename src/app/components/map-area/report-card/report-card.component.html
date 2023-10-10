@@ -1,7 +1,7 @@
-<mat-card>
+<mat-card *ngIf="report.id">{{report.id}}
     <mat-card-header>
-        <mat-card-title>{{ reportTypes[report.type - 1] }}</mat-card-title>
-        <mat-card-subtitle> דווח בשעה: {{ report.created_at | date }}</mat-card-subtitle>
+        <mat-card-title>{{report.report_amount}} {{ reportTypes[report.type - 1] }}</mat-card-title>
+        <mat-card-subtitle> דווח בשעה: {{ report.time }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         <p>{{ report.description }}</p>

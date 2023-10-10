@@ -31,7 +31,7 @@ export class ReportFormComponent implements OnInit {
       lat: [this.reportModel.lat, [Validators.required]],
       lng: [this.reportModel.lng, [Validators.required]],
       report_amount: [this.reportModel.report_amount || 1, [Validators.required,  Validators.pattern('([0-9]+)')]],
-      time: [this.reportModel.created_at || new Date().getTime(), [Validators.required]],
+      time: [this.reportModel.time || new Date().getTime(), [Validators.required]],
       id: [this.reportModel.id || null]
     });
 

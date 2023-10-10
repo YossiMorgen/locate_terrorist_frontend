@@ -10,12 +10,14 @@ import { ReportsService } from 'src/app/services/reports/reports.service';
   styleUrls: ['./report-card.component.css']
 })
 export class ReportCardComponent {
-  report = new ReportModel({ type: 1, report_amount: 2, description: "2", lat: 30.987051, lng: 34.947929, created_at: new Date(), id: 1 });
+  report = new ReportModel();
   reportTypes = Object.keys(ReportType).filter((reportType) => isNaN(Number(reportType)));
 
   constructor(private reportService: ReportsService) { }
   ngOnInit(): void {
-    this.reportService.reportChanges.subscribe((report) => {            
+    this.reportService.reportChanges.subscribe((report) => {  
+      console.log(report);
+                
       this.report = report;
     });  
   }

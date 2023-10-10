@@ -5,7 +5,7 @@ export class ReportModel {
   public description: string;
   public lat: number;
   public lng: number;
-  public created_at: Date;
+  public time: Date;
   public id: number;
   public report_amount: number;  
 
@@ -15,7 +15,7 @@ export class ReportModel {
       this.description = reportModel.description;
       this.lat = reportModel.lat;
       this.lng = reportModel.lng;
-      this.created_at = reportModel.created_at;
+      this.time = reportModel.time;
       this.id = reportModel.id;
       this.report_amount = reportModel.report_amount;
     }

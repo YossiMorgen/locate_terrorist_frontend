@@ -29,7 +29,7 @@ export class LoginComponent {
   public async login():Promise<void>{ 
     try {
       await this.auth.login(this.loginForm.value as CredentialsModel);
-      // this.router.navigateByUrl('/reports');
+      this.router.navigateByUrl('/reports');
     } catch (error: any) {
       this.toast.error(error);
     }
