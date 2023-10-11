@@ -6,7 +6,7 @@ import {
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
   MatFormFieldModule
 } from '@angular/material/form-field';
-import {BidiModule} from '@angular/cdk/bidi';
+import { BidiModule } from '@angular/cdk/bidi';
 
 import { MatInputModule } from '@angular/material/input';
 import { A11yModule } from '@angular/cdk/a11y';

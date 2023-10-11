@@ -11,13 +11,12 @@
   color: blue !important;
 }
 
-
 /* desktop */
 @media only screen and (min-width: 768px) {
   .categoryRadios {
     padding: 0 40px;
   }
-  .logout{
+  .logout {
     margin-left: 40px;
   }
 }
@@ -26,7 +25,7 @@
   .categoryRadios {
     width: 100%; /* Optional: Set the width to 100% for mobile */
   }
-  .logout{
+  .logout {
     display: block;
   }
 }

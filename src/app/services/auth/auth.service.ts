@@ -11,43 +11,42 @@ import jwtDecode from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
-
   private token: string = null;
   public role: number = 2;
 
-  constructor( 
-      private http: HttpClient, 
-      private config: AppConfigService, 
-      private router : Router,
-  ){ 
+  constructor(
+    private http: HttpClient,
+    private config: AppConfigService,
+    private router: Router
+  ) {
     const token = window.sessionStorage.getItem('token') || null;
-    if( token ) this.setUser(token)
+    if (token) this.setUser(token);
   }
 
-  public async login( credentials: CredentialsModel): Promise<void> {
-    const observable = this.http.post<string>( this.config.login, credentials );    
+  public async login(credentials: CredentialsModel): Promise<void> {
+    const observable = this.http.post<string>(this.config.login, credentials);
     const token = await firstValueFrom(observable);
     this.setUser(token);
   }
 
-  public logout():void{        
-      this.token = '';
-      window.sessionStorage.removeItem('token')
-      this.router.navigate(['/login']);
+  public logout(): void {
+    this.token = '';
+    window.sessionStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 
-  public isLoggedIn():boolean{
-      return this.token != null;
+  public isLoggedIn(): boolean {
+    return this.token != null;
   }
 
-  public getToken():string{
-      return this.token;
+  public getToken(): string {
+    return this.token;
   }
 
-  private setUser(token: string):void{
+  private setUser(token: string): void {
     this.token = token;
-    window.sessionStorage.setItem('token', token );
-    const decode: any = jwtDecode( token )
-    this.role = decode.role;  
+    window.sessionStorage.setItem('token', token);
+    const decode: any = jwtDecode(token);
+    this.role = decode.role;
   }
 }

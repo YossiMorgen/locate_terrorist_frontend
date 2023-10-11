@@ -1,4 +1,4 @@
-import { ReportType } from "./type-enum";
+import { ReportType } from './type-enum';
 
 export class ReportModel {
   public type: ReportType;
@@ -7,10 +7,10 @@ export class ReportModel {
   public lng: number;
   public time: Date;
   public id: string;
-  public report_amount: number;  
+  public report_amount: number;
 
   constructor(reportModel?: ReportModel) {
-    if(reportModel) {
+    if (reportModel) {
       this.type = reportModel.type;
       this.description = reportModel.description;
       this.lat = reportModel.lat;

@@ -9,7 +9,7 @@ import { MapComponent } from './components/map-area/map/map.component';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   // { path: 'reports', component: MapComponent },
-  { path: 'reports', component: MapComponent, canActivate: [LoggedInService]  },
+  { path: 'reports', component: MapComponent, canActivate: [LoggedInService] },
   { path: '', redirectTo: '/reports', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];

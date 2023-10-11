@@ -12,35 +12,42 @@ import { ToastifyNotificationsService } from 'src/app/services/toastify-notifica
   styleUrls: ['./report-form.component.css']
 })
 export class ReportFormComponent implements OnInit {
-  
   public formGroup: FormGroup;
   public reportTypesSelect: string[];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public reportModel: ReportModel,
     public reportService: ReportsService,
-    private formBuilder : FormBuilder,
+    private formBuilder: FormBuilder,
     private toast: ToastifyNotificationsService,
-    public dialogRef: MatDialogRef<ReportFormComponent>,
-  ) {  }
+    public dialogRef: MatDialogRef<ReportFormComponent>
+  ) {}
 
-  ngOnInit() { 
+  ngOnInit() {
     this.formGroup = this.formBuilder.group({
       type: [this.reportModel.type || 1, [Validators.required]],
       description: [this.reportModel.description || ' '],
       lat: [this.reportModel.lat, [Validators.required]],
       lng: [this.reportModel.lng, [Validators.required]],
-      report_amount: [this.reportModel.report_amount || 1, [Validators.required,  Validators.pattern('([0-9]+)')]],
-      time: [this.reportModel.time || new Date().getTime(), [Validators.required]],
+      report_amount: [
+        this.reportModel.report_amount || 1,
+        [Validators.required, Validators.pattern('([0-9]+)')]
+      ],
+      time: [
+        this.reportModel.time || new Date().getTime(),
+        [Validators.required]
+      ],
       id: [this.reportModel.id || null]
     });
 
-    this.reportTypesSelect = Object.keys(ReportType).filter((key) => isNaN(Number(key)));
+    this.reportTypesSelect = Object.keys(ReportType).filter((key) =>
+      isNaN(Number(key))
+    );
   }
 
   submitReport() {
     try {
-      if(this.reportModel.id){
+      if (this.reportModel.id) {
         this.reportService.updateReport(this.formGroup.value as ReportModel);
         this.toast.success('הדיווח עודכן בהצלחה');
       } else {
@@ -62,5 +69,4 @@ export class ReportFormComponent implements OnInit {
       this.toast.error(error.message);
     }
   }
-
 }

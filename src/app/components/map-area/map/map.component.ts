@@ -131,8 +131,8 @@ export class MapComponent implements OnInit, AfterViewInit {
           popupText = `<mat-card *ngIf="report.id">
                           <mat-card-header>
                               <mat-card-title>${data.report_amount || ''} ${
-            this.layers[data.type].name
-          }</mat-card-title>
+                                this.layers[data.type].name
+                              }</mat-card-title>
                           </mat-card-header>
                           <mat-card-content>
                               <p>${data.description}</p>
@@ -193,16 +193,19 @@ export class MapComponent implements OnInit, AfterViewInit {
     }, 200);
 
     if (this.auth.role != 1) {
-      setInterval(async () => {
-        try {
-          await this.reportsService.getReports();
-        } catch (error: any) {
-          this.toast.error(error.message);
-          return;
-        }
+      setInterval(
+        async () => {
+          try {
+            await this.reportsService.getReports();
+          } catch (error: any) {
+            this.toast.error(error.message);
+            return;
+          }
 
-        this.updateMarkers();
-      }, 1000 * 60 * 2);
+          this.updateMarkers();
+        },
+        1000 * 60 * 2
+      );
     }
   }
 

@@ -11,7 +11,6 @@ import CredentialsModel from 'src/app/models/credentials-model';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-
   hide = true;
 
   public constructor(
@@ -22,11 +21,11 @@ export class LoginComponent {
   ) {}
 
   public loginForm = this.formBuilder.group({
-    username : ['', [Validators.required]],
-    password : ['', [Validators.required]]
-  })
+    username: ['', [Validators.required]],
+    password: ['', [Validators.required]]
+  });
 
-  public async login():Promise<void>{ 
+  public async login(): Promise<void> {
     try {
       await this.auth.login(this.loginForm.value as CredentialsModel);
       this.router.navigateByUrl('/reports');
