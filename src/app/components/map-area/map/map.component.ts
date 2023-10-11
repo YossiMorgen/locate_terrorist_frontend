@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as Leaflet from 'leaflet';
 import { ReportModel } from 'src/app/models/reports-model';
@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements OnInit, AfterViewInit {
   map!: Leaflet.Map;
   markers: Leaflet.Marker[] = [];
 
@@ -29,7 +29,9 @@ export class MapComponent implements AfterViewInit {
     public toast: ToastifyNotificationsService,
     private zone: NgZone,
     public auth: AuthService
-  ) {}
+  ) {
+    this.handleGeoLocation();
+  }
 
   options: Leaflet.MapOptions = {
     layers: [
@@ -41,6 +43,24 @@ export class MapComponent implements AfterViewInit {
     center: { lat: 28.626137, lng: 79.821603 }
   };
 
+  myLatLng: Leaflet.LatLng | null = null;
+
+  handleGeoLocation() {
+    if (!navigator.geolocation.getCurrentPosition) return;
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lon = position.coords.longitude;
+        const lat = position.coords.latitude;
+        this.myLatLng = new Leaflet.LatLng(lat, lon);
+        console.log(this.myLatLng);
+      },
+      (error) => {
+        this.toast.message('אין גישה למיקום שלך');
+      }
+    );
+  }
+  ngOnInit(): void {}
+
   ngAfterViewInit(): void {
     this.map?.setZoom(0);
     setTimeout(() => {
@@ -48,7 +68,11 @@ export class MapComponent implements AfterViewInit {
     }, 0);
   }
 
-  async initMarkers(lat: number = null, lng: number = null) {
+  async initMarkers() {
+    const lat = this.myLatLng?.lat;
+    const lng = this.myLatLng?.lng;
+    console.log('myLatLng', { lat, lng });
+
     try {
       await this.reportsService.getReports();
     } catch (error: any) {
@@ -107,8 +131,8 @@ export class MapComponent implements AfterViewInit {
           popupText = `<mat-card *ngIf="report.id">
                           <mat-card-header>
                               <mat-card-title>${data.report_amount || ''} ${
-                                this.layers[data.type].name
-                              }</mat-card-title>
+            this.layers[data.type].name
+          }</mat-card-title>
                           </mat-card-header>
                           <mat-card-content>
                               <p>${data.description}</p>
@@ -164,36 +188,26 @@ export class MapComponent implements AfterViewInit {
   onMapReady($event: Leaflet.Map) {
     this.map = $event;
     this.map.setView(new Leaflet.LatLng(30.987051, 34.947929), 8);
-    this.updateMarkers();
+    setTimeout(() => {
+      this.initMarkers();
+    }, 200);
 
     if (this.auth.role != 1) {
-      setInterval(
-        async () => {
-          try {
-            await this.reportsService.getReports();
-          } catch (error: any) {
-            this.toast.error(error.message);
-            return;
-          }
+      setInterval(async () => {
+        try {
+          await this.reportsService.getReports();
+        } catch (error: any) {
+          this.toast.error(error.message);
+          return;
+        }
 
-          this.updateMarkers();
-        },
-        1000 * 60 * 2
-      );
+        this.updateMarkers();
+      }, 1000 * 60 * 2);
     }
   }
 
   updateMarkers() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const lon = position.coords.longitude;
-        const lat = position.coords.latitude;
-        this.initMarkers(lat, lon);
-      });
-    } else {
-      this.toast.message('אין גישה למיקום שלך');
-      this.initMarkers();
-    }
+    this.initMarkers();
   }
 
   mapClicked($event: Leaflet.LeafletMouseEvent) {
