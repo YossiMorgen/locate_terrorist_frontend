@@ -1,3 +1,5 @@
+this was an urgent project designed to help the civilians security to help in the 7/10 
+
 # LocateTerroristsFront
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.4.
